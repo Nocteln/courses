@@ -1,0 +1,33 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+nav {
+  background-color: red;
+  padding: 2vh;
+  text-align: center;
+}
+nav h1 {
+  font-size: 175%;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-top: 2vh;
+}
+
+form label {
+  font-size: large;
+  padding-bottom: 5px;
+}
+
+form input {
+  border-radius: 10px;
+  height: 3vh;
+  width: 20vw;
+}
