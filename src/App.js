@@ -1,14 +1,55 @@
 // https://uiverse.io/andrew-demchenk0/rotten-catfish-34
 
+import { useState } from "react";
 import "./App.css";
 
+const listeDeCourses = [
+  { nom: "Pain", check: false, quantity: 1 },
+  { nom: "Lait", check: true, quantity: 1 },
+  { nom: "Œufs", check: false, quantity: 1 },
+  { nom: "Beurre", check: true, quantity: 1 },
+  { nom: "Fromage", check: false, quantity: 1 },
+  { nom: "Pommes", check: false, quantity: 1 },
+  { nom: "Bananes", check: true, quantity: 1 },
+  { nom: "Poulet", check: false, quantity: 1 },
+  { nom: "Riz", check: false, quantity: 1 },
+  { nom: "Pâtes", check: true, quantity: 1 },
+  { nom: "Légumes", check: false, quantity: 1 },
+  { nom: "Céréales", check: false, quantity: 1 },
+];
+
 export default function App() {
+  // const [check, setCheck] = useState();
+  const [items, setItems] = useState(listeDeCourses);
+
+  function handleToggleItem(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.nom === id ? { ...item, check: !item.check } : item
+      )
+    );
+  }
+
+  function handleDelete(id) {
+    setItems((item) => items.filter(item.nom !== id));
+  }
+
   return (
-    <>
+    <div className="App">
       <NavBar />
       <Form />
-      <ListNone />
-    </>
+      <ListNone
+        items={items}
+        onToggleItem={handleToggleItem}
+        onDeleteItem={handleDelete}
+      />
+      <div className="barreSeparation"></div>
+      <Complete
+        items={items}
+        onToggleItem={handleToggleItem}
+        onDeleteItem={handleDelete}
+      />
+    </div>
   );
 }
 
@@ -23,48 +64,67 @@ function NavBar() {
 function Form() {
   return (
     <form>
-      <label for="input">Ajouter un article</label>
-      <input type="text" id="input" />
+      <label>Ajouter un article</label>
+      <input type="text" />
     </form>
   );
 }
 
-function ListNone() {
-  const listeDeCourses = [
-    { nom: "Pain", check: false },
-    { nom: "Lait", check: true },
-    { nom: "Œufs", check: false },
-    { nom: "Beurre", check: true },
-    { nom: "Fromage", check: false },
-    { nom: "Pommes", check: false },
-    { nom: "Bananes", check: true },
-    { nom: "Poulet", check: false },
-    { nom: "Riz", check: false },
-    { nom: "Pâtes", check: true },
-    { nom: "Légumes", check: false },
-    { nom: "Céréales", check: false },
-  ];
-
+function ListNone({ items, onToggleItem, onDeleteItem }) {
   return (
-    <div>
-      {listeDeCourses.map((item) => (
-        <Item item={item} />
-      ))}
+    <div className="listNone">
+      <ul>
+        {items.map((item) =>
+          item.check === false ? (
+            <Item
+              item={item}
+              onToggleItem={onToggleItem}
+              key={item.nom}
+              onDeleteItem={onDeleteItem}
+            />
+          ) : (
+            ""
+          )
+        )}
+      </ul>
     </div>
   );
 }
 
-function Complete() {
-  return <div></div>;
+function Complete({ items, onToggleItem, onDeleteItem }) {
+  return (
+    <div className="listNone">
+      <ul>
+        {items.map((item) =>
+          item.check === true ? (
+            <Item
+              item={item}
+              onToggleItem={onToggleItem}
+              key={item.nom}
+              onDeleteItem={onDeleteItem}
+            />
+          ) : (
+            ""
+          )
+        )}
+      </ul>
+    </div>
+  );
 }
 
-function Item({ item }) {
+function Item({ item, onToggleItem, onDeleteItem }) {
   return (
-    <div className="item">
-      <input checked="checked" type="checkbox" />
-      <div class="checkmark"></div>
-      <h3>{item.nom}</h3>
-      <h3>❌</h3>
-    </div>
+    <li className="item">
+      <input
+        checked={item.check}
+        type="checkbox"
+        onChange={() => onToggleItem(item.nom)}
+      />
+      <h3>
+        {item.nom} x{item.quantity}
+      </h3>
+
+      <button onClick={() => onDeleteItem(item.nom)}>❌</button>
+    </li>
   );
 }
