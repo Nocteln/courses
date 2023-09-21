@@ -3,75 +3,195 @@
 import { useState } from "react";
 import "./App.css";
 
+const listeDeCourses = [
+  { nom: "Pain", check: false, quantity: 1 },
+  { nom: "Lait", check: true, quantity: 1 },
+  { nom: "Œufs", check: false, quantity: 1 },
+  { nom: "Beurre", check: true, quantity: 1 },
+  { nom: "Fromage", check: false, quantity: 1 },
+  { nom: "Pommes", check: false, quantity: 1 },
+  { nom: "Bananes", check: true, quantity: 1 },
+  { nom: "Poulet", check: false, quantity: 1 },
+  { nom: "Riz", check: false, quantity: 1 },
+  { nom: "Pâtes", check: true, quantity: 1 },
+  { nom: "Légumes", check: false, quantity: 1 },
+  { nom: "Céréales", check: false, quantity: 1 },
+];
+
 export default function App() {
+  // const [check, setCheck] = useState();
+  const [items, setItems] = useState(listeDeCourses);
+
+  function handleToggleItem(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.nom === id ? { ...item, check: !item.check } : item
+      )
+    );
+  }
+
+  function handleDelete(id) {
+    setItems((items) => items.filter((item) => item.nom !== id));
+  }
+
+  // function handleAddItem(item) {
+  //   setItems((items) => [...items, item]);
+  // }
+
+  function handleAddItem(item) {
+    const existingItemIndex = items.findIndex((art) => art.nom === item.nom);
+
+    if (existingItemIndex !== -1) {
+      // Si l'article existe, incrémente la quantité
+      const updatedItems = [...items];
+      items[existingItemIndex].quantity += Number(item.quantity);
+      console.log(item);
+      setItems(updatedItems);
+    } else {
+      // Si l'article n'existe pas, ajoute-le à la liste
+      setItems((prevItems) => [...prevItems, item]);
+    }
+  }
+
   return (
-    <>
+    <div className="App">
       <NavBar />
-      <Form />
-      <ListNone />
-    </>
+      <h3>Ajouter un article</h3>
+      <Form onAddItem={handleAddItem} />
+      <ListNone
+        items={items}
+        onToggleItem={handleToggleItem}
+        onDeleteItem={handleDelete}
+      />
+      <div className="barreSeparation"></div>
+      <Complete
+        items={items}
+        onToggleItem={handleToggleItem}
+        onDeleteItem={handleDelete}
+      />
+      <Footer items={items} />
+    </div>
   );
 }
 
 function NavBar() {
+  //Faites vos courses avec ❤️
   return (
     <nav>
-      <h1>Faites vos courses avec ❤️</h1>
+      <h1>cc</h1>
     </nav>
   );
 }
-
-function Form() {
+function Footer({ items }) {
+  let checked = 0;
+  items.filter((item) => (item.check === true ? checked++ : ""));
+  const percent = Math.floor((checked / items.length) * 100);
+  console.log(percent);
   return (
-    <form>
-      <label for="input">Ajouter un article</label>
-      <input type="text" id="input" />
+    <footer>
+      <h1>
+        Vous avez fait {percent}% pourcent de vos courses ({checked}/
+        {items.length})
+      </h1>
+    </footer>
+  );
+}
+
+function Form({ onAddItem }) {
+  const [itemName, setItemName] = useState("");
+  const [itemNumber, setItemNumber] = useState(1);
+  let newItem = {};
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!itemName) return;
+    newItem.nom = itemName;
+    newItem.quantity = itemNumber ? itemNumber : 1;
+    newItem.check = false;
+
+    onAddItem(newItem);
+
+    setItemName("");
+    setItemNumber("");
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={itemName}
+        onChange={(e) => setItemName(e.target.value)}
+      />
+      <select
+        value={itemNumber}
+        onChange={(e) => setItemNumber(Number(e.target.value))}
+      >
+        {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
     </form>
   );
 }
 
-function ListNone() {
-  const listeDeCourses = [
-    { nom: "Pain", check: false },
-    { nom: "Lait", check: true },
-    { nom: "Œufs", check: false },
-    { nom: "Beurre", check: true },
-    { nom: "Fromage", check: false },
-    { nom: "Pommes", check: false },
-    { nom: "Bananes", check: true },
-    { nom: "Poulet", check: false },
-    { nom: "Riz", check: false },
-    { nom: "Pâtes", check: true },
-    { nom: "Légumes", check: false },
-    { nom: "Céréales", check: false },
-  ];
-
+function ListNone({ items, onToggleItem, onDeleteItem }) {
   return (
-    <div>
-      {listeDeCourses.map((item) => (
-        <Item item={item} />
-      ))}
+    <div className="listNone">
+      <ul>
+        {items.map((item) =>
+          item.check === false ? (
+            <Item
+              item={item}
+              onToggleItem={onToggleItem}
+              key={item.nom}
+              onDeleteItem={onDeleteItem}
+            />
+          ) : (
+            ""
+          )
+        )}
+      </ul>
     </div>
   );
 }
 
-function Complete() {
-  return <div></div>;
+function Complete({ items, onToggleItem, onDeleteItem }) {
+  return (
+    <div className="listNone">
+      <ul>
+        {items.map((item) =>
+          item.check === true ? (
+            <Item
+              item={item}
+              onToggleItem={onToggleItem}
+              key={item.nom}
+              onDeleteItem={onDeleteItem}
+            />
+          ) : (
+            ""
+          )
+        )}
+      </ul>
+    </div>
+  );
 }
 
-function Item({ item }) {
-  const [check, onCheck] = useState(false);
-  console.log(item);
+function Item({ item, onToggleItem, onDeleteItem }) {
   return (
-    <div className="item">
+    <li className="item">
       <input
-        checked="checked"
+        checked={item.check}
         type="checkbox"
-        value={check}
-        onChange={() => onCheck(!check)}
+        onChange={() => onToggleItem(item.nom)}
       />
-      <h3>{item.nom}</h3>
-      <h3>❌</h3>
-    </div>
+      <h3 className={item.check ? "checked" : ""}>
+        {item.nom} x{item.quantity}
+      </h3>
+
+      <button onClick={() => onDeleteItem(item.nom)}>❌</button>
+    </li>
   );
 }

@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+.App {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.App h3 {
+  text-align: center;
+  padding-top: 5px;
+}
 nav {
   background-color: red;
   padding: 2vh;
@@ -17,7 +28,6 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   padding-top: 2vh;
 }
 
@@ -30,4 +40,72 @@ form input {
   border-radius: 10px;
   height: 3vh;
   width: 20vw;
+  padding: 15px;
+  margin-right: 20px;
+}
+
+form select {
+  padding: 10px;
+}
+
+.listNone {
+  /* display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 25px; */
+  padding: 4rem 0;
+
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 3.2rem;
+  align-items: center;
+}
+
+.listNone ul {
+  list-style: none;
+  width: 80%;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+  justify-content: center;
+  align-content: start;
+}
+
+.listNone li {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.item {
+  display: flex;
+  padding: 15px;
+}
+
+.item input[type="checkbox"] {
+  height: 1rem;
+  width: 1rem;
+  accent-color: #e5771f;
+}
+
+.listNone li button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+}
+
+.barreSeparation {
+  height: 10px;
+  width: 70%;
+  background-color: red;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+.checked {
+  text-decoration: line-through;
 }
