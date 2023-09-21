@@ -1,5 +1,6 @@
 // https://uiverse.io/andrew-demchenk0/rotten-catfish-34
 
+import { useState } from "react";
 import "./App.css";
 
 export default function App() {
@@ -59,10 +60,16 @@ function Complete() {
 }
 
 function Item({ item }) {
+  const [check, onCheck] = useState(false);
+  console.log(item);
   return (
     <div className="item">
-      <input checked="checked" type="checkbox" />
-      <div class="checkmark"></div>
+      <input
+        checked="checked"
+        type="checkbox"
+        value={check}
+        onChange={() => onCheck(!check)}
+      />
       <h3>{item.nom}</h3>
       <h3>❌</h3>
     </div>
