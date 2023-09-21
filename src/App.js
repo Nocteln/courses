@@ -75,10 +75,9 @@ export default function App() {
 }
 
 function NavBar() {
-  //Faites vos courses avec ❤️
   return (
     <nav>
-      <h1>cc</h1>
+      <h1>Faites vos courses avec ❤️</h1>
     </nav>
   );
 }
